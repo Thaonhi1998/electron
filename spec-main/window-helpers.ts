@@ -11,7 +11,7 @@ async function ensureWindowIsClosed (window: BrowserWindow | null) {
       // await the 'closed' event which signals the complete shutdown of the
       // window.
       const isClosed = emittedOnce(window, 'closed');
-      window.destroy();
+      window.close();
       await isClosed;
     } else {
       // If there's no WebContents or if the WebContents is already destroyed,
