@@ -120,6 +120,10 @@ BaseWindow::~BaseWindow() {
 
   // Remove global reference so the JS object can be garbage collected.
   self_ref_.Reset();
+  if (IsInObserverList()) {
+    LOG(ERROR)
+        << "DANGER BASE WINDOW IS DESTROYED BUT STILL IN OBSERVER LIST!!!!!";
+  }
 }
 
 void BaseWindow::InitWith(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
@@ -152,6 +156,7 @@ void BaseWindow::OnWindowClosed() {
   weak_factory_.InvalidateWeakPtrs();
 
   RemoveFromWeakMap();
+  LOG(INFO) << "In BaseWindow::OnWindowClosed; about to remove observer";
   window_->RemoveObserver(this);
 
   // We can not call Destroy here because we need to call Emit first, but we
